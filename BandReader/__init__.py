@@ -1,0 +1,3 @@
+HA2EV = 27.2114
+
+ENABLE_DEBUG = True
