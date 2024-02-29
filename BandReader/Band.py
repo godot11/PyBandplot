@@ -12,7 +12,7 @@ from .DataReader import DataReader
 from .AmsReader import AMSReader
 
 class BandData:
-    def __init__(self, dfolder: str, prefix: str, reader: Type[DataReader] = AMSReader, reader_kwargs: Dict = None):
+    def __init__(self, dfolder: str, prefix: str, reader: Type[DataReader] = AMSReader, reader_kwargs: Dict = None, fermi_offset=0.0):
 
         if reader_kwargs is None:
             reader_kwargs = {}
@@ -48,10 +48,10 @@ class BandData:
             raise ValueError('Could not find neither bands nor DOS data.')
 
         try:
-            self.e_fermi = self.reader.get_efermi()
+            self.e_fermi = self.reader.get_efermi() + fermi_offset
         except:
-            warnings.warn("Could not get Fermi energy. Proceeding with E_fermi = 0.")
-            self.e_fermi = 0.0
+            warnings.warn(f"Could not get Fermi energy. Proceeding with E_fermi = {fermi_offset:f}.")
+            self.e_fermi = fermi_offset
 
     def _check_bands(self):
         if not self.bands_available:

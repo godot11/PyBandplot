@@ -52,11 +52,9 @@ class AMSReader(DataReader):
         return {'E_fermi': efermi1, 'k': r1, 'sym': symcoords, 'band_up': bands1, 'band_dw': bands2, 'fat_up': fat1, 'fat_dw': fat2}
 
     def bands_available(self):
-        print(self._files['band'], self._files['band_up'])
         return not (self._files['band'] is None and self._files['band_up'] is None)
 
     def dos_available(self):
-        print(self._files['dos'])
         return self._files['dos'] is not None
 
     def get_bands(self):
@@ -92,9 +90,9 @@ def get_paths(dfolder, prefix="", postfix=""):
 
 def get_files(dfolder, prefix='', postfix=''):
     paths = get_paths(dfolder, prefix)  # band, bandalpha, bandbeta, dos
-    MARK(paths, n='path')
+    # MARK(paths, n='path')
     files = {k: p if os.path.exists(p) else None for k, p in paths.items()}
-    MARK(files, n='file')
+    # MARK(files, n='file')
     return files
 
 
@@ -158,9 +156,9 @@ def read_dos(dosfile):
                 raise NotImplementedError("The data file contains projected s,p,d,f DOS. Handling this is not implemented.")
             if l:
                 downlines.append(np.fromstring(l.strip(), dtype=float, sep=' '))
-    up, e_dos = np.array(uplines).T
+    up, e_dos = np.array(uplines[:-1]).T
     if is_spinp:
-        dwn, e_dos2 = np.array(downlines).T
+        dwn, e_dos2 = np.array(downlines[:-1]).T
         if not np.allclose(e_dos, e_dos2):
             raise ValueError('Erroneous DOS file: up and dwn energies differ')
     else:
